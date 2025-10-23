@@ -14,14 +14,10 @@ export default function Home() {
           <Shield className="h-6 w-6 text-primary" />
           <span className="ml-2 font-bold font-headline">PhishAware</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="/login"
-            className="text-sm font-medium underline-offset-4 hover:underline"
-            prefetch={false}
-          >
-            Login
-          </Link>
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+          <Button asChild variant="ghost">
+            <Link href="/login">Login</Link>
+          </Button>
           <Button asChild>
             <Link href="/signup">Sign Up</Link>
           </Button>
