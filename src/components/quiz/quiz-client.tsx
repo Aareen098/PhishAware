@@ -10,6 +10,8 @@ import { CheckCircle2, XCircle, ArrowRight, RotateCw, BarChart } from 'lucide-re
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { QuizFeedback } from './quiz-feedback';
+import type { QuizAttempt } from '@/lib/types';
 
 type QuizClientProps = {
   scenario: Scenario;
@@ -21,6 +23,7 @@ export function QuizClient({ scenario }: QuizClientProps) {
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [attempt, setAttempt] = useState<QuizAttempt>({ questions: [] });
 
   const currentQuestion = scenario.questions[currentQuestionIndex];
   const totalQuestions = scenario.questions.length;
@@ -32,13 +35,31 @@ export function QuizClient({ scenario }: QuizClientProps) {
 
   const handleSubmit = () => {
     if (!selectedOptionId) return;
-    setIsAnswered(true);
+    
     const selectedOption = currentQuestion.options.find(
       (opt) => opt.id === selectedOptionId
     );
-    if (selectedOption?.isCorrect) {
+    const isCorrect = !!selectedOption?.isCorrect;
+
+    setIsAnswered(true);
+
+    if (isCorrect) {
       setScore(score + 1);
     }
+    
+    setAttempt(prev => ({
+        ...prev,
+        questions: [
+            ...prev.questions,
+            {
+                questionText: currentQuestion.text,
+                userAnswer: selectedOption?.text || '',
+                correctAnswer: currentQuestion.options.find(o => o.isCorrect)?.text || '',
+                wasCorrect: isCorrect,
+                explanation: currentQuestion.explanation,
+            }
+        ]
+    }));
   };
 
   const handleNextQuestion = () => {
@@ -47,6 +68,11 @@ export function QuizClient({ scenario }: QuizClientProps) {
       setIsAnswered(false);
       setSelectedOptionId(null);
     } else {
+      setAttempt(prev => ({
+        ...prev,
+        scenarioTitle: scenario.title,
+        score: Math.round((score / totalQuestions) * 100),
+      }));
       setShowResults(true);
     }
   };
@@ -57,38 +83,42 @@ export function QuizClient({ scenario }: QuizClientProps) {
     setIsAnswered(false);
     setScore(0);
     setShowResults(false);
+    setAttempt({ questions: [] });
   }
 
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   if (showResults) {
     return (
-        <Card className="text-center">
-            <CardHeader>
-                <CardTitle className="text-3xl font-headline">Scenario Complete!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <p className="text-lg text-muted-foreground">Your Score:</p>
-                <p className="text-6xl font-bold text-primary">
-                    {Math.round((score / totalQuestions) * 100)}%
-                </p>
-                <p className="text-muted-foreground">
-                    You correctly answered {score} out of {totalQuestions} questions.
-                </p>
-            </CardContent>
-            <CardFooter className="flex justify-center gap-4">
-                 <Button onClick={handleRestart}>
-                    <RotateCw className="mr-2 h-4 w-4" />
-                    Try Again
-                </Button>
-                <Button asChild variant="outline">
-                    <Link href="/dashboard">
-                        <BarChart className="mr-2 h-4 w-4" />
-                        Back to Dashboard
-                    </Link>
-                </Button>
-            </CardFooter>
-        </Card>
+        <div className="space-y-6">
+            <Card className="text-center">
+                <CardHeader>
+                    <CardTitle className="text-3xl font-headline">Scenario Complete!</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <p className="text-lg text-muted-foreground">Your Score:</p>
+                    <p className="text-6xl font-bold text-primary">
+                        {Math.round((score / totalQuestions) * 100)}%
+                    </p>
+                    <p className="text-muted-foreground">
+                        You correctly answered {score} out of {totalQuestions} questions.
+                    </p>
+                </CardContent>
+                <CardFooter className="flex justify-center gap-4">
+                     <Button onClick={handleRestart}>
+                        <RotateCw className="mr-2 h-4 w-4" />
+                        Try Again
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href="/dashboard">
+                            <BarChart className="mr-2 h-4 w-4" />
+                            Back to Dashboard
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+            {attempt.scenarioTitle && <QuizFeedback attempt={attempt as Required<QuizAttempt>} />}
+        </div>
     );
   }
 

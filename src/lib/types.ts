@@ -52,3 +52,15 @@ export type LeaderboardUser = {
   scenariosCompleted: number;
   averageScore: number;
 };
+
+export type QuizAttempt = {
+  scenarioTitle?: string;
+  score?: number;
+  questions: {
+    questionText: string;
+    userAnswer: string;
+    correctAnswer: string;
+    wasCorrect: boolean;
+    explanation: string;
+  }[];
+};
