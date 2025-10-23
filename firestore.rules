@@ -1,0 +1,134 @@
+/**
+ * @fileoverview Firestore Security Rules for the PhishAware application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user profiles and quiz attempts,
+ * ensuring that only authenticated users can access their own data. Public read access is
+ * granted for quizzes and questions.
+ *
+ * Data Structure:
+ * - /users/{userId}: Stores user profile information. Accessible only by the authenticated user.
+ * - /quizzes/{quizId}: Stores quiz data. Publicly readable.
+ * - /questions/{questionId}: Stores question data. Publicly readable.
+ * - /users/{userId}/quiz_attempts/{userQuizAttemptId}: Stores user's quiz attempts. Accessible only by the authenticated user.
+ *
+ * Key Security Decisions:
+ * - User listing is disallowed to protect user privacy.
+ * - Quizzes and questions are publicly readable.
+ * - Data validation is limited to authorization-critical fields to allow for rapid prototyping.
+ * - All write operations require authentication.
+ *
+ * Denormalization for Authorization:
+ * The data model already supports path-based authorization, eliminating the need for denormalization.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Enforces user-ownership for user profiles. Only the authenticated user can access their own profile.
+     * @path /users/{userId}
+     * @allow (get, create, update, delete, list) if request.auth.uid == userId
+     * @deny (get, create, update, delete, list) if request.auth.uid != userId
+     * @principle Enforces document ownership for writes. Restricts access to a user's own data tree.
+     */
+    match /users/{userId} {
+      // Helper function to check if the user is signed in and owns the resource.
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      // Allows a user to read their own profile.
+      allow get: if isOwner(userId);
+
+      // Blocks listing all users.
+      allow list: if false;
+
+      // Allows a user to create their own profile, enforcing that the userId in the path matches the authenticated user's ID.
+      allow create: if isOwner(userId) && request.resource.data.id == request.auth.uid;
+
+      // Allows a user to update their own profile, enforcing that the userId in the path matches the authenticated user's ID.
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+
+      // Allows a user to delete their own profile.
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Allows public read access to quizzes. Write access is disallowed.
+     * @path /quizzes/{quizId}
+     * @allow (get, list) if true
+     * @allow (create, update, delete) if false
+     * @deny (create, update, delete) always
+     * @principle Public read access with owner-only writes is not yet enforced as there is no ownerId field.
+     */
+    match /quizzes/{quizId} {
+      // Allows anyone to read quiz data.
+      allow get, list: if true;
+
+      // Disallows creating, updating, or deleting quizzes.
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+
+    /**
+     * @description Allows public read access to questions. Write access is disallowed.
+     * @path /questions/{questionId}
+     * @allow (get, list) if true
+     * @allow (create, update, delete) if false
+     * @deny (create, update, delete) always
+     * @principle Public read access with owner-only writes is not yet enforced as there is no ownerId field.
+     */
+    match /questions/{questionId} {
+      // Allows anyone to read question data.
+      allow get, list: if true;
+
+      // Disallows creating, updating, or deleting questions.
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+
+    /**
+     * @description Enforces user-ownership for quiz attempts. Only the authenticated user can access their own quiz attempts.
+     * @path /users/{userId}/quiz_attempts/{userQuizAttemptId}
+     * @allow (get, create, update, delete, list) if request.auth.uid == userId
+     * @deny (get, create, update, delete, list) if request.auth.uid != userId
+     * @principle Enforces document ownership for writes. Restricts access to a user's own data tree.
+     */
+    match /users/{userId}/quiz_attempts/{userQuizAttemptId} {
+      // Helper function to check if the user is signed in and owns the resource.
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      // Allows a user to read their own quiz attempts.
+      allow get: if isOwner(userId);
+
+      // Allows a user to list their own quiz attempts.
+      allow list: if isOwner(userId);
+
+      // Allows a user to create their own quiz attempts, enforcing that the userId in the path matches the authenticated user's ID.
+      allow create: if isOwner(userId) && request.resource.data.userId == request.auth.uid;
+
+      // Allows a user to update their own quiz attempts, enforcing that the userId in the path matches the authenticated user's ID.
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+
+      // Allows a user to delete their own quiz attempts.
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}

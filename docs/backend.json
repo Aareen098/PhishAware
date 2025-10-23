@@ -1,0 +1,254 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user in the PhishAware application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL of the user's profile photo, if available.",
+          "format": "uri"
+        },
+        "creationTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        },
+        "lastSignInTime": {
+          "type": "string",
+          "description": "Timestamp indicating the last time the user signed in.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email"
+      ]
+    },
+    "Quiz": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Quiz",
+      "type": "object",
+      "description": "Represents a phishing simulation quiz.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Quiz entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the quiz."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the quiz content and purpose."
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Difficulty level of the quiz (e.g., Easy, Medium, Hard)."
+        },
+        "questionIds": {
+          "type": "array",
+          "description": "References to Questions. (Relationship: Quiz 1:N Question)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "difficulty"
+      ]
+    },
+    "Question": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Question",
+      "type": "object",
+      "description": "Represents a question within a phishing simulation quiz.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Question entity."
+        },
+        "quizId": {
+          "type": "string",
+          "description": "Reference to Quiz. (Relationship: Quiz 1:N Question)"
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of the question."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of question (e.g., multiple-choice, image-based, audio snippet)."
+        },
+        "options": {
+          "type": "array",
+          "description": "Possible answers to the question.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correctAnswerIndex": {
+          "type": "number",
+          "description": "Index of the correct answer in the options array."
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Detailed explanation of why the answer is correct."
+        }
+      },
+      "required": [
+        "id",
+        "quizId",
+        "text",
+        "type",
+        "correctAnswerIndex",
+        "explanation"
+      ]
+    },
+    "UserQuizAttempt": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserQuizAttempt",
+      "type": "object",
+      "description": "Represents a user's attempt at a specific quiz.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserQuizAttempt entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N UserQuizAttempt)"
+        },
+        "quizId": {
+          "type": "string",
+          "description": "Reference to Quiz. (Relationship: Quiz 1:N UserQuizAttempt)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the quiz attempt started.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the quiz attempt ended.",
+          "format": "date-time"
+        },
+        "score": {
+          "type": "number",
+          "description": "The score the user achieved on the quiz."
+        },
+        "answers": {
+          "type": "array",
+          "description": "Array of user's answers to each question in the quiz. Each item can be questionId and answerIndex",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "quizId",
+        "startTime",
+        "score"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information.  Accessible only by the authenticated user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/quizzes/{quizId}",
+        "definition": {
+          "entityName": "Quiz",
+          "schema": {
+            "$ref": "#/backend/entities/Quiz"
+          },
+          "description": "Stores quiz data.",
+          "params": [
+            {
+              "name": "quizId",
+              "description": "The unique identifier of the quiz."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/questions/{questionId}",
+        "definition": {
+          "entityName": "Question",
+          "schema": {
+            "$ref": "#/backend/entities/Question"
+          },
+          "description": "Stores question data.",
+          "params": [
+            {
+              "name": "questionId",
+              "description": "The unique identifier of the question."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/quiz_attempts/{userQuizAttemptId}",
+        "definition": {
+          "entityName": "UserQuizAttempt",
+          "schema": {
+            "$ref": "#/backend/entities/UserQuizAttempt"
+          },
+          "description": "Stores user's quiz attempts. Accessible only by the authenticated user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "userQuizAttemptId",
+              "description": "The unique identifier of the user quiz attempt."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the PhishAware application, focusing on secure user authentication, interactive phishing simulations, and performance analytics. The structure adheres to the core design principles, including Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are Not Filters).\n\n**Authorization Independence:**\nTo ensure authorization independence, the design avoids hierarchical authorization dependencies (`get()` calls in security rules). User-specific data, such as quiz attempts, are stored under the `/users/{userId}` path. This path-based ownership eliminates the need to fetch parent document data for authorization, enabling atomic operations and simplifying security rules.  No denormalization is required in this scenario as the security rules are based on the authenticated user.\n\n**Structural Segregation:**\nThe structure segregates data based on access requirements. User profiles are stored in `/users/{userId}`, ensuring that only the authenticated user can access their data. Quizzes and Questions are stored in separate collections, with no security requirements other than existence, which enables listing.\n\n**Access Modeling:**\nPath-based ownership is used for private user data (`/users/{userId}`). This pattern simplifies security rules and enhances security.\n\n**QAPs (Rules are not Filters):**\nThe segregation of data into separate collections based on access control requirements directly supports QAPs. List operations are inherently secure because each collection contains data with uniform access policies. For example, listing quizzes requires no filtering based on user roles or permissions.\n\n**Invariants:**\nThe structure supports data integrity by associating user-specific data directly with the user's ID. Timestamps and other critical data points are stored within the relevant documents, ensuring consistency and traceability."
+  }
+}
