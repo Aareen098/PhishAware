@@ -8,12 +8,10 @@ export default function AuthLayout({
 }) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center p-4 auth-bg">
-      <div className="absolute top-8 left-8">
-        <Link href="/" className="flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors">
-          <Shield className="h-6 w-6" />
-          <h1 className="text-xl font-bold font-headline">PhishAware</h1>
-        </Link>
-      </div>
+      <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-foreground/80 transition-colors hover:text-foreground">
+        <Shield className="h-6 w-6" />
+        <h1 className="text-xl font-bold font-headline">PhishAware</h1>
+      </Link>
       <div className="w-full max-w-sm">{children}</div>
       <footer className="absolute bottom-4 text-xs text-foreground/60">
         &copy; 2024 PhishAware. All rights reserved.
