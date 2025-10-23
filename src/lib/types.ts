@@ -42,3 +42,13 @@ export type NewsArticle = {
   imageUrl: string;
   imageHint: string;
 };
+
+export type LeaderboardUser = {
+  id: string;
+  rank: number;
+  name: string;
+  avatarUrl: string;
+  imageHint: string;
+  scenariosCompleted: number;
+  averageScore: number;
+};

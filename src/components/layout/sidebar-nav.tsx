@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Newspaper, Settings, User } from "lucide-react";
+import { Home, Newspaper, Settings, User, Trophy } from "lucide-react";
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -11,6 +11,7 @@ import {
 
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", tooltip: "Dashboard" },
+  { href: "/leaderboard", icon: Trophy, label: "Leaderboard", tooltip: "Leaderboard" },
   { href: "/news", icon: Newspaper, label: "Cybercrime News", tooltip: "News" },
   { href: "/profile", icon: User, label: "Profile", tooltip: "Profile" },
   { href: "/settings", icon: Settings, label: "Settings", tooltip: "Settings" },
