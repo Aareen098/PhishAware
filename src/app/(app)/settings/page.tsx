@@ -1,4 +1,3 @@
-import { ProfileForm } from "@/components/settings/profile-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SettingsPage() {
@@ -10,13 +9,13 @@ export default function SettingsPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Profile</CardTitle>
+                    <CardTitle>Preferences</CardTitle>
                     <CardDescription>
-                        This is how others will see you on the site.
+                        Adjust your application settings.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ProfileForm />
+                    <p>General application settings will go here.</p>
                 </CardContent>
             </Card>
         </div>

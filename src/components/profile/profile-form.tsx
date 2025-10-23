@@ -74,8 +74,7 @@ export function ProfileForm() {
                 <Input placeholder="Your name" {...field} />
               </FormControl>
               <FormDescription>
-                This is the name that will be displayed on your profile and in
-                emails.
+                This is the name that will be displayed on your profile.
               </FormDescription>
               <FormMessage />
             </FormItem>
