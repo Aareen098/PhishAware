@@ -4,7 +4,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -63,7 +62,6 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 export function SignupForm() {
   const auth = useAuth();
   const firestore = useFirestore();
-  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -93,7 +91,7 @@ export function SignupForm() {
     signInWithPopup(auth, provider)
       .then(result => {
         syncUserData(result.user);
-        router.replace('/dashboard');
+        // The redirect is handled by the AuthRedirect component
       })
       .catch((error: any) => {
         toast({

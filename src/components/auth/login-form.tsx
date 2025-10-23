@@ -62,7 +62,6 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 export function LoginForm() {
   const auth = useAuth();
   const firestore = useFirestore();
-  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -92,7 +91,7 @@ export function LoginForm() {
     signInWithPopup(auth, provider)
       .then(result => {
         syncUserData(result.user);
-        router.replace('/dashboard');
+        // The redirect is handled by the AuthRedirect component
       })
       .catch((error: any) => {
         toast({
