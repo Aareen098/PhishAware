@@ -1,3 +1,4 @@
+
 import { Shield } from 'lucide-react';
 import Link from 'next/link';
 
@@ -12,7 +13,7 @@ export default function AuthLayout({
         <Shield className="h-6 w-6" />
         <h1 className="text-xl font-bold font-headline">PhishAware</h1>
       </Link>
-      <div className="w-full max-w-sm">{children}</div>
+      <div className="w-full max-w-sm mb-12">{children}</div>
       <footer className="absolute bottom-4 text-xs text-foreground/60">
         &copy; 2024 PhishAware. All rights reserved.
       </footer>
