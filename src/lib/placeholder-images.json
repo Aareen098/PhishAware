@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "user-avatar",
+      "description": "Default user avatar",
+      "imageUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx1c2VyJTIwYXZhdGFyfGVufDB8fHx8MTc2MTEzNDAxOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "user avatar"
+    },
+    {
+      "id": "scenario-social-media",
+      "description": "Phishing scenario related to social media",
+      "imageUrl": "https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzb2NpYWwlMjBtZWRpYXxlbnwwfHx8fDE3NjExNzA2MzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "social media"
+    },
+    {
+      "id": "scenario-bank-impersonation",
+      "description": "Phishing scenario impersonating a bank",
+      "imageUrl": "https://images.unsplash.com/photo-1554469384-e58fac16e23a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxiYW5rJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzYxMTE4OTAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "bank building"
+    },
+    {
+      "id": "scenario-package-delivery",
+      "description": "Phishing scenario about package delivery",
+      "imageUrl": "https://images.unsplash.com/photo-1758523670564-d1d6a734dc0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxkZWxpdmVyeSUyMHBhY2thZ2V8ZW58MHx8fHwxNzYxMjIyMTE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "delivery package"
+    },
+    {
+      "id": "scenario-ceo-fraud",
+      "description": "Phishing scenario related to CEO fraud",
+      "imageUrl": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb3Jwb3JhdGUlMjBvZmZpY2V8ZW58MHx8fHwxNzYxMjIyMTE4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "corporate office"
+    },
+    {
+      "id": "news-cyber-attack",
+      "description": "News article image for a cyber attack story",
+      "imageUrl": "https://images.unsplash.com/photo-1555680510-34daedadbdb1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb21wdXRlciUyMGNvZGV8ZW58MHx8fHwxNzYxMjEyNTUzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "computer code"
+    },
+    {
+      "id": "news-data-breach",
+      "description": "News article image for a data breach story",
+      "imageUrl": "https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzZXJ2ZXIlMjByb29tfGVufDB8fHx8MTc2MTE1OTMzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "server room"
+    },
+    {
+      "id": "news-new-scam",
+      "description": "News article image for a new scam alert",
+      "imageUrl": "https://images.unsplash.com/photo-1665789318391-6057c533005e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxxdWVzdGlvbiUyMG1hcmt8ZW58MHx8fHwxNzYxMjIwODE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "question mark"
+    },
+    {
+      "id": "question-fake-login",
+      "description": "Image for a question showing a fake login page",
+      "imageUrl": "https://images.unsplash.com/photo-1513594964634-381b22a9e135?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsb2dpbiUyMHNjcmVlbnxlbnwwfHx8fDE3NjEyMjIxMTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "login screen"
+    }
+  ]
 }
