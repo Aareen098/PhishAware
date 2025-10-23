@@ -74,19 +74,19 @@ export function ProfileForm() {
     }
   }, [user, form, firestore]);
   
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) return;
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
-    try {
-        const storageRef = ref(storage, `avatars/${user.uid}/${file.name}`);
-        await uploadBytes(storageRef, file);
-        const photoURL = await getDownloadURL(storageRef);
+    const storageRef = ref(storage, `avatars/${user.uid}/${file.name}`);
 
+    uploadBytes(storageRef, file)
+      .then(() => getDownloadURL(storageRef))
+      .then(photoURL => {
         // Update Firebase Auth profile
-        await updateProfile(user, { photoURL });
+        updateProfile(user, { photoURL });
 
         // Update Firestore document
         const userRef = doc(firestore, "users", user.uid);
@@ -96,17 +96,18 @@ export function ProfileForm() {
             title: "Avatar updated!",
             description: "Your new profile picture has been saved.",
         });
-
-    } catch (error) {
+      })
+      .catch(error => {
         console.error("Avatar Upload Error:", error);
         toast({
             title: "Upload Failed",
             description: "There was an error uploading your avatar.",
             variant: "destructive",
         });
-    } finally {
+      })
+      .finally(() => {
         setIsUploading(false);
-    }
+      });
   }
 
   function onSubmit(data: ProfileFormValues) {
