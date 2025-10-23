@@ -16,7 +16,7 @@ Instant Feedback & Explanations — Learn why answers are right or wrong.
 
 Progress Tracking — Per-user scores, per-category analytics, and session history.
 
-Leaderboard (Optional) — Friendly competition to drive engagement.
+Leaderboard  — Friendly competition to drive engagement.
 
 Test Mode — Safe demo URLs and scenarios for functionality testing.
 
