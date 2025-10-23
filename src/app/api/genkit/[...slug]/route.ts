@@ -6,20 +6,6 @@ import {NextJSPlugin} from '@genkit-ai/next';
 import '@/ai/flows/adaptive-learning-path';
 import '@/ai/flows/quiz-feedback-flow';
 
-genkit({
-  plugins: [googleAI(), NextJSPlugin()],
-});
+const {GET, POST} = NextJSPlugin();
 
-export async function GET(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<void> {
-  return;
-}
-
-export async function POST(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<void> {
-  return;
-}
+export {GET, POST};
