@@ -6,22 +6,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function LoginPage() {
   return (
-    <Card>
-      <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
+    <Card className={cn('auth-card')}>
+      <CardHeader className="space-y-2 text-center">
+        <CardTitle className="text-2xl font-bold tracking-tight">Welcome Back!</CardTitle>
         <CardDescription>
-          Enter your email below to log in to your account
+          Sign in to continue your training and stay sharp.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm />
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline">
+          <Link href="/signup" className="font-semibold text-primary underline-offset-4 hover:underline">
             Sign up
           </Link>
         </div>

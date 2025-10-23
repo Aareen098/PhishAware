@@ -27,6 +27,7 @@ import { useAuth, useFirestore } from "@/firebase";
 import { initiateEmailSignIn } from "@/firebase/non-blocking-login";
 import { useToast } from "@/hooks/use-toast";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -115,18 +116,6 @@ export function LoginForm() {
 
   return (
     <div className="grid gap-6">
-      <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" onClick={() => handleSocialSignIn(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
-        <Button variant="outline" onClick={() => handleSocialSignIn(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
-      </div>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-        </div>
-      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -134,9 +123,9 @@ export function LoginForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="m@example.com" {...field} />
+                  <Input className="input-glow bg-background/70" placeholder="m@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,19 +136,31 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="sr-only">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input className="input-glow bg-background/70" type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full font-semibold">
             Log In
           </Button>
         </form>
       </Form>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+       <div className="grid grid-cols-2 gap-4">
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
+      </div>
     </div>
   );
 }

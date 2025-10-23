@@ -85,3 +85,44 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .auth-bg {
+    @apply bg-gradient-to-br from-blue-100 via-purple-100 to-indigo-200 dark:from-gray-900 dark:via-blue-950 dark:to-indigo-950;
+    background-size: 200% 200%;
+    animation: gradient-animation 20s ease infinite;
+  }
+
+  .auth-card {
+    @apply bg-card/80 backdrop-blur-sm border-white/20;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  .dark .auth-card {
+     box-shadow: 0 0 0 1px hsl(var(--border)), 0 8px 32px 0 rgba(0,0,0, 0.37);
+  }
+  
+  .auth-card:focus-within {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background transition-all duration-300;
+  }
+
+  .input-glow:focus-within {
+    @apply ring-2 ring-primary/50;
+  }
+
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .hero-bg {
+    @apply bg-gradient-to-b from-background to-blue-50 dark:from-background dark:to-blue-950/20;
+  }
+}

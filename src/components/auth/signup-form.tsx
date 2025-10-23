@@ -125,28 +125,16 @@ export function SignupForm() {
 
   return (
     <div className="grid gap-6">
-      <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" onClick={() => handleSocialSignUp(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
-        <Button variant="outline" onClick={() => handleSocialSignUp(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
-      </div>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-        </div>
-      </div>
-      <Form {...form}>
+       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="sr-only">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input className="input-glow bg-background/70" placeholder="John Doe" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,9 +145,9 @@ export function SignupForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="m@example.com" {...field} />
+                  <Input className="input-glow bg-background/70" placeholder="m@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,19 +158,31 @@ export function SignupForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="sr-only">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input className="input-glow bg-background/70" type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full font-semibold">
             Create Account
           </Button>
         </form>
       </Form>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
+      </div>
     </div>
   );
 }
