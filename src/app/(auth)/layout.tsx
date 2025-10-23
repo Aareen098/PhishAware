@@ -1,6 +1,7 @@
 
 import { Shield } from 'lucide-react';
 import Link from 'next/link';
+import { Footer } from '@/components/layout/footer';
 
 export default function AuthLayout({
   children,
@@ -14,9 +15,7 @@ export default function AuthLayout({
         <h1 className="text-xl font-bold font-headline">PhishAware</h1>
       </Link>
       <div className="w-full max-w-sm mb-12">{children}</div>
-      <footer className="absolute bottom-4 text-xs text-foreground/60">
-        &copy; 2024 PhishAware. All rights reserved.
-      </footer>
+      <Footer />
     </div>
   );
 }

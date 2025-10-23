@@ -12,6 +12,7 @@ import { Shield } from 'lucide-react';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { UserNav } from '@/components/layout/user-nav';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
+import { Footer } from '@/components/layout/footer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -35,11 +36,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:px-6">
-            <ThemeToggle />
-            <UserNav />
-          </header>
-          <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-6 md:gap-8">{children}</main>
+          <div className="flex flex-col min-h-screen">
+            <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:px-6">
+              <ThemeToggle />
+              <UserNav />
+            </header>
+            <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-6 md:gap-8">{children}</main>
+            <Footer />
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </div>
