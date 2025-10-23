@@ -73,22 +73,23 @@ export function LoginForm() {
     },
   });
 
-  const handleSocialSignIn = async (provider: GoogleAuthProvider | OAuthProvider) => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      await syncUserData(user);
-      router.push("/dashboard");
-    } catch (error: any) {
-      toast({
-        title: "Login Failed",
-        description: error.message,
-        variant: "destructive",
+  const handleSocialSignIn = (provider: GoogleAuthProvider | OAuthProvider) => {
+    signInWithPopup(auth, provider)
+      .then(result => {
+        // This will trigger the onAuthStateChanged listener in the provider
+        syncUserData(result.user);
+      })
+      .catch((error: any) => {
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
       });
-    }
   };
 
-  const syncUserData = async (user: User) => {
+  const syncUserData = (user: User) => {
+    if (!firestore) return;
     const userRef = doc(firestore, "users", user.uid);
     const userData = {
       id: user.uid,
@@ -104,7 +105,7 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await initiateEmailSignIn(auth, values.email, values.password);
-      router.push("/dashboard");
+      // The redirect is handled by the AuthRedirect component
     } catch (error: any) {
       toast({
         title: "Login Failed",
