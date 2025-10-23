@@ -10,6 +10,7 @@ import { StatsCard } from '@/components/dashboard/stats-card';
 import { PerformanceChart } from '@/components/dashboard/performance-chart';
 import { ScenarioList } from '@/components/dashboard/scenario-list';
 import { AdaptiveScenarioSuggester } from '@/components/dashboard/adaptive-scenario-suggester';
+import { ProfileCard } from '@/components/profile/profile-card';
 
 export default function DashboardPage() {
   return (
@@ -36,15 +37,26 @@ export default function DashboardPage() {
          <AdaptiveScenarioSuggester />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-        <Card className="col-span-1 lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Performance Over Time</CardTitle>
-            <CardDescription>Your score progression on simulations.</CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <PerformanceChart />
-          </CardContent>
-        </Card>
+        <div className="col-span-1 flex flex-col gap-4 lg:col-span-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance Over Time</CardTitle>
+              <CardDescription>Your score progression on simulations.</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <PerformanceChart />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle>Profile Status</CardTitle>
+                <CardDescription>Your account details and activity.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ProfileCard />
+            </CardContent>
+          </Card>
+        </div>
         <Card className="col-span-1 lg:col-span-3">
           <CardHeader>
             <CardTitle>Training Scenarios</CardTitle>
