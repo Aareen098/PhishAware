@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useUser, useFirestore } from "@/firebase";
+import { doc } from "firebase/firestore";
+import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { updateProfile } from "firebase/auth";
 
 const profileFormSchema = z.object({
   name: z
@@ -35,29 +40,49 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-// This can be set to a default value or fetched from your authentication provider.
-const defaultValues: Partial<ProfileFormValues> = {
-  name: "PhishAware User",
-  email: "user@phishaware.com",
-};
-
 export function ProfileForm() {
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      name: "",
+      email: "",
+    },
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.displayName || "",
+        email: user.email || "",
+      });
+    }
+  }, [user, form]);
+
   function onSubmit(data: ProfileFormValues) {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to update your profile.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Update Firebase Auth profile
+    updateProfile(user, { displayName: data.name });
+
+    // Update Firestore document
+    const userRef = doc(firestore, "users", user.uid);
+    updateDocumentNonBlocking(userRef, { displayName: data.name, email: data.email });
+
     toast({
       title: "Profile updated successfully!",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: "Your profile information has been saved.",
     });
   }
 
@@ -87,7 +112,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Your email address" {...field} />
+                <Input placeholder="Your email address" {...field} disabled />
               </FormControl>
               <FormDescription>
                 This is the email address associated with your account.

@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth, useFirestore } from "@/firebase";
+import { initiateEmailSignUp } from "@/firebase/non-blocking-login";
+import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { doc } from "firebase/firestore";
+import { useToast } from "@/hooks/use-toast";
+import { Auth, updateProfile } from "firebase/auth";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -41,6 +48,11 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export function SignupForm() {
+  const auth = useAuth();
+  const firestore = useFirestore();
+  const router = useRouter();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +62,33 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Here you would call your Firebase auth function for signup
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await initiateEmailSignUp(auth, values.email, values.password);
+      
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          await updateProfile(user, { displayName: values.name });
+          const userRef = doc(firestore, "users", user.uid);
+          const userData = {
+            id: user.uid,
+            email: user.email,
+            displayName: values.name,
+            photoURL: user.photoURL,
+            creationTime: user.metadata.creationTime,
+            lastSignInTime: user.metadata.lastSignInTime,
+          };
+          setDocumentNonBlocking(userRef, userData, { merge: true });
+          router.push("/dashboard");
+        }
+      });
+    } catch (error: any) {
+      toast({
+        title: "Sign-up Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   }
 
   return (
