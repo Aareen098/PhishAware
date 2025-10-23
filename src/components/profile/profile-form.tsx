@@ -1,9 +1,11 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useUser, useFirestore } from "@/firebase";
+import { useUser, useFirestore, useStorage } from "@/firebase";
 import { doc } from "firebase/firestore";
 import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { updateProfile } from "firebase/auth";
@@ -37,7 +39,6 @@ const profileFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  photoURL: z.string().url({ message: "Please enter a valid URL." }).or(z.literal("")),
   bio: z.string().max(160).optional(),
 });
 
@@ -47,13 +48,15 @@ export function ProfileForm() {
   const { toast } = useToast();
   const { user } = useUser();
   const firestore = useFirestore();
+  const storage = useStorage();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       displayName: "",
       email: "",
-      photoURL: "",
       bio: "",
     },
     mode: "onChange",
@@ -61,17 +64,49 @@ export function ProfileForm() {
 
   useEffect(() => {
     if (user) {
-      const userRef = doc(firestore, "users", user.uid);
       // In a real app, you'd fetch the bio from Firestore.
       // For this example, we'll just use the auth profile.
       form.reset({
         displayName: user.displayName || "",
         email: user.email || "",
-        photoURL: user.photoURL || "",
         bio: "Security enthusiast learning to spot phishing attacks.", // Mock bio
       });
     }
   }, [user, form, firestore]);
+  
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user) return;
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+        const storageRef = ref(storage, `avatars/${user.uid}/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const photoURL = await getDownloadURL(storageRef);
+
+        // Update Firebase Auth profile
+        await updateProfile(user, { photoURL });
+
+        // Update Firestore document
+        const userRef = doc(firestore, "users", user.uid);
+        updateDocumentNonBlocking(userRef, { photoURL });
+
+        toast({
+            title: "Avatar updated!",
+            description: "Your new profile picture has been saved.",
+        });
+
+    } catch (error) {
+        toast({
+            title: "Upload Failed",
+            description: "There was an error uploading your avatar.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsUploading(false);
+    }
+  }
 
   function onSubmit(data: ProfileFormValues) {
     if (!user) {
@@ -83,16 +118,15 @@ export function ProfileForm() {
       return;
     }
     
-    // Update Firebase Auth profile
-    updateProfile(user, { displayName: data.displayName, photoURL: data.photoURL });
+    // Update Firebase Auth profile for displayName
+    updateProfile(user, { displayName: data.displayName });
 
-    // Update Firestore document
+    // Update Firestore document for displayName, email, bio
     const userRef = doc(firestore, "users", user.uid);
     updateDocumentNonBlocking(userRef, { 
         displayName: data.displayName, 
         email: data.email,
-        photoURL: data.photoURL,
-        // In a real app, you would also save the bio here.
+        // bio: data.bio, // In a real app, you would also save the bio here.
     });
 
     toast({
@@ -136,22 +170,18 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-         <FormField
-          control={form.control}
-          name="photoURL"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Avatar URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://example.com/avatar.png" {...field} />
-              </FormControl>
-              <FormDescription>
-                Enter a URL for your profile picture.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+         <FormItem>
+            <FormLabel>Avatar</FormLabel>
+            <FormControl>
+                <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+            </FormControl>
+            <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                {isUploading ? 'Uploading...' : 'Upload new picture'}
+            </Button>
+            <FormDescription>
+                Upload a new profile picture.
+            </FormDescription>
+        </FormItem>
          <FormField
           control={form.control}
           name="bio"
