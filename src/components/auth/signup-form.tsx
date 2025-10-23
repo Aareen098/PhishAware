@@ -11,6 +11,7 @@ import {
   OAuthProvider,
   User,
   updateProfile,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { doc } from "firebase/firestore";
 
@@ -25,7 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
-import { initiateEmailSignUp } from "@/firebase/non-blocking-login";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { useToast } from "@/hooks/use-toast";
 
@@ -105,15 +105,14 @@ export function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await initiateEmailSignUp(auth, values.email, values.password);
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
       
-      auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          await updateProfile(user, { displayName: values.name });
-          await syncUserData(user);
-          router.push("/dashboard");
-        }
-      });
+      await updateProfile(user, { displayName: values.name });
+      await syncUserData({ ...user, displayName: values.name });
+      
+      router.push("/dashboard");
+
     } catch (error: any) {
       toast({
         title: "Sign-up Failed",
