@@ -1,3 +1,4 @@
+import { ProfileForm } from "@/components/settings/profile-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SettingsPage() {
@@ -9,15 +10,13 @@ export default function SettingsPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Coming Soon</CardTitle>
+                    <CardTitle>Profile</CardTitle>
                     <CardDescription>
-                        This section is under construction. Soon you will be able to manage your profile, notifications, and other settings here.
+                        This is how others will see you on the site.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex h-48 items-center justify-center rounded-md border-2 border-dashed">
-                        <p className="text-muted-foreground">More settings coming soon!</p>
-                    </div>
+                    <ProfileForm />
                 </CardContent>
             </Card>
         </div>
