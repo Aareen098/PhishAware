@@ -43,8 +43,8 @@ export const leaderboardData: LeaderboardUser[] = [
     name: 'PhishAware User',
     avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx1c2VyJTIwYXZhdGFyfGVufDB8fHx8MTc2MTEzNDAxOHww&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'user avatar',
-    scenariosCompleted: 4,
-    averageScore: 82,
+    scenariosCompleted: 0,
+    averageScore: 0,
   },
   {
     id: 'user-6',

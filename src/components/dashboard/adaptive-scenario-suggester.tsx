@@ -31,12 +31,12 @@ export function AdaptiveScenarioSuggester() {
 
     // Mock user performance data
     const userPerformance: UserPerformance = {
-      easyCorrect: 5,
-      easyTotal: 5,
-      mediumCorrect: 3,
-      mediumTotal: 5,
-      hardCorrect: 1,
-      hardTotal: 2,
+      easyCorrect: 0,
+      easyTotal: 0,
+      mediumCorrect: 0,
+      mediumTotal: 0,
+      hardCorrect: 0,
+      hardTotal: 0,
     };
 
     const availableScenarios = scenarios.map((s) => s.id);

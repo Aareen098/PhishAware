@@ -18,21 +18,21 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Scenarios Completed"
-          value="4"
+          value="0"
           icon={<ShieldCheck className="h-4 w-4 text-muted-foreground" />}
           description="out of 12 available"
         />
         <StatsCard
           title="Average Score"
-          value="82%"
+          value="0%"
           icon={<Target className="h-4 w-4 text-muted-foreground" />}
-          description="+5% from last month"
+          description="Complete a scenario to see your score"
         />
         <StatsCard
           title="Weakest Area"
-          value="Email Phishing"
+          value="N/A"
           icon={<Activity className="h-4 w-4 text-muted-foreground" />}
-          description="Focus on identifying fake links"
+          description="Complete scenarios to analyze"
         />
          <AdaptiveScenarioSuggester />
       </div>

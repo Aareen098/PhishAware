@@ -17,12 +17,12 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-  { month: "January", score: 65 },
-  { month: "February", score: 72 },
-  { month: "March", score: 75 },
-  { month: "April", score: 68 },
-  { month: "May", score: 80 },
-  { month: "June", score: 82 },
+  { month: "January", score: 0 },
+  { month: "February", score: 0 },
+  { month: "March", score: 0 },
+  { month: "April", score: 0 },
+  { month: "May", score: 0 },
+  { month: "June", score: 0 },
 ]
 
 const chartConfig = {
