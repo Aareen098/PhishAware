@@ -53,6 +53,18 @@
       "description": "Image for a question showing a fake login page",
       "imageUrl": "https://images.unsplash.com/photo-1513594964634-381b22a9e135?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsb2dpbiUyMHNjcmVlbnxlbnwwfHx8fDE3NjEyMjIxMTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "login screen"
+    },
+    {
+      "id": "scenario-tech-support",
+      "description": "Phishing scenario related to a tech support scam",
+      "imageUrl": "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0ZWNoJTIwc3VwcG9ydHxlbnwwfHx8fDE3NjMyODg2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tech support"
+    },
+    {
+      "id": "scenario-fake-invoice",
+      "description": "Phishing scenario related to a fake invoice",
+      "imageUrl": "https://images.unsplash.com/photo-1599587985473-231f23c7f766?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbnZvaWNlfGVufDB8fHx8MTc2MzI4ODYzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "invoice document"
     }
   ]
 }
