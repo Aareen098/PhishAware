@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useStorage } from "@/firebase";
 import { doc } from "firebase/firestore";
-import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { updateDocumentNonBlocking, setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { updateProfile } from "firebase/auth";
 import { Textarea } from "../ui/textarea";
 
@@ -90,7 +90,7 @@ export function ProfileForm() {
 
         // Update Firestore document
         const userRef = doc(firestore, "users", user.uid);
-        updateDocumentNonBlocking(userRef, { photoURL });
+        setDocumentNonBlocking(userRef, { photoURL }, { merge: true });
 
         toast({
             title: "Avatar updated!",
@@ -98,6 +98,7 @@ export function ProfileForm() {
         });
 
     } catch (error) {
+        console.error("Avatar Upload Error:", error);
         toast({
             title: "Upload Failed",
             description: "There was an error uploading your avatar.",
