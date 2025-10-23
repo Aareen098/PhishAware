@@ -1,7 +1,6 @@
 import { NextJSPlugin } from '@genkit-ai/next';
 
-import '@/ai/flows/adaptive-learning-path';
-import '@/ai/flows/quiz-feedback-flow';
+// The NextJSPlugin automatically discovers the flows, so they don't need to be imported here.
 
 const { GET, POST } = NextJSPlugin();
 
