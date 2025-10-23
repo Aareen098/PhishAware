@@ -4,6 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  OAuthProvider,
+  User,
+  updateProfile,
+} from "firebase/auth";
+import { doc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,9 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
 import { initiateEmailSignUp } from "@/firebase/non-blocking-login";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
-import { doc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { Auth, updateProfile } from "firebase/auth";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -62,6 +68,34 @@ export function SignupForm() {
     },
   });
 
+  const handleSocialSignUp = async (provider: GoogleAuthProvider | OAuthProvider) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      await syncUserData(user);
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Sign-up Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const syncUserData = async (user: User) => {
+    const userRef = doc(firestore, "users", user.uid);
+    const userData = {
+      id: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      creationTime: user.metadata.creationTime,
+      lastSignInTime: user.metadata.lastSignInTime,
+    };
+    setDocumentNonBlocking(userRef, userData, { merge: true });
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await initiateEmailSignUp(auth, values.email, values.password);
@@ -69,16 +103,7 @@ export function SignupForm() {
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           await updateProfile(user, { displayName: values.name });
-          const userRef = doc(firestore, "users", user.uid);
-          const userData = {
-            id: user.uid,
-            email: user.email,
-            displayName: values.name,
-            photoURL: user.photoURL,
-            creationTime: user.metadata.creationTime,
-            lastSignInTime: user.metadata.lastSignInTime,
-          };
-          setDocumentNonBlocking(userRef, userData, { merge: true });
+          await syncUserData(user);
           router.push("/dashboard");
         }
       });
@@ -94,8 +119,8 @@ export function SignupForm() {
   return (
     <div className="grid gap-6">
       <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline"><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
-        <Button variant="outline"><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
+        <Button variant="outline" onClick={() => handleSocialSignUp(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
+        <Button variant="outline" onClick={() => handleSocialSignUp(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
       </div>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
