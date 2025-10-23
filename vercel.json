@@ -1,4 +1,5 @@
 {
+  "builds": [{ "src": "next.config.ts", "use": "@vercel/next" }],
   "functions": {
     "src/app/api/genkit/**": {
       "memory": 2048,
