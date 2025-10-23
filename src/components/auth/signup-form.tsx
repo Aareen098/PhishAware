@@ -75,23 +75,8 @@ export function SignupForm() {
     },
   });
 
-  const handleSocialSignUp = (provider: GoogleAuthProvider | OAuthProvider) => {
-    signInWithPopup(auth, provider)
-      .then(result => {
-        // This will trigger the onAuthStateChanged listener in the provider
-        syncUserData(result.user);
-      })
-      .catch((error: any) => {
-        toast({
-          title: "Sign-up Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      });
-  };
-
   const syncUserData = (user: User) => {
-    if (!firestore) return;
+    if (!firestore || !user) return;
     const userRef = doc(firestore, "users", user.uid);
     const userData = {
       id: user.uid,
@@ -103,6 +88,21 @@ export function SignupForm() {
     };
     setDocumentNonBlocking(userRef, userData, { merge: true });
   };
+  
+  const handleSocialSignUp = (provider: GoogleAuthProvider | OAuthProvider) => {
+    signInWithPopup(auth, provider)
+      .then(result => {
+        syncUserData(result.user);
+        router.replace('/dashboard');
+      })
+      .catch((error: any) => {
+        toast({
+          title: "Sign-up Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      });
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -110,8 +110,9 @@ export function SignupForm() {
       const user = userCredential.user;
       
       await updateProfile(user, { displayName: values.name });
-      // The user data sync and redirect is handled by the onAuthStateChanged listener
+      syncUserData({ ...user, displayName: values.name });
       
+      // The redirect is handled by the AuthRedirect component
     } catch (error: any) {
       toast({
         title: "Sign-up Failed",

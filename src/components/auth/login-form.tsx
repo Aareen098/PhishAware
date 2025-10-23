@@ -73,11 +73,26 @@ export function LoginForm() {
     },
   });
 
+  const syncUserData = (user: User) => {
+    if (!firestore || !user) return;
+    const userRef = doc(firestore, "users", user.uid);
+    const userData = {
+      id: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      creationTime: user.metadata.creationTime,
+      lastSignInTime: user.metadata.lastSignInTime,
+    };
+    // Use the non-blocking fire-and-forget update
+    setDocumentNonBlocking(userRef, userData, { merge: true });
+  };
+
   const handleSocialSignIn = (provider: GoogleAuthProvider | OAuthProvider) => {
     signInWithPopup(auth, provider)
       .then(result => {
-        // This will trigger the onAuthStateChanged listener in the provider
         syncUserData(result.user);
+        router.replace('/dashboard');
       })
       .catch((error: any) => {
         toast({
@@ -88,24 +103,10 @@ export function LoginForm() {
       });
   };
 
-  const syncUserData = (user: User) => {
-    if (!firestore) return;
-    const userRef = doc(firestore, "users", user.uid);
-    const userData = {
-      id: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      creationTime: user.metadata.creationTime,
-      lastSignInTime: user.metadata.lastSignInTime,
-    };
-    setDocumentNonBlocking(userRef, userData, { merge: true });
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await initiateEmailSignIn(auth, values.email, values.password);
-      // The redirect is handled by the AuthRedirect component
+      // The redirect is handled by the AuthRedirect component for password auth
     } catch (error: any) {
       toast({
         title: "Login Failed",
