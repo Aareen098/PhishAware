@@ -1,3 +1,4 @@
+
 {
   "name": "nextn",
   "version": "0.1.0",
@@ -10,8 +11,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@genkit-ai/core": "^1.8.0",
-    "@genkit-ai/google-genai": "^1.8.0",
     "@hookform/resolvers": "4.1.3",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -48,16 +47,19 @@
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@genkit-ai/core": "^1.8.0",
+    "@genkit-ai/google-genai": "^1.8.0",
+    "@genkit-ai/nextjs": "latest"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "genkit-cli": "^1.8.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "tsx": "^4.15.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "genkit-cli": "^1.8.0",
+    "tsx": "^4.15.7"
   }
 }
