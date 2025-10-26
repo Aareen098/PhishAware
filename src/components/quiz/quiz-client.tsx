@@ -10,7 +10,6 @@ import { CheckCircle2, XCircle, ArrowRight, RotateCw, BarChart } from 'lucide-re
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { QuizFeedback } from './quiz-feedback';
 import type { QuizAttempt } from '@/lib/types';
 
 type QuizClientProps = {
@@ -117,7 +116,6 @@ export function QuizClient({ scenario }: QuizClientProps) {
                     </Button>
                 </CardFooter>
             </Card>
-            {attempt.scenarioTitle && <QuizFeedback attempt={attempt as Required<QuizAttempt>} />}
         </div>
     );
   }
