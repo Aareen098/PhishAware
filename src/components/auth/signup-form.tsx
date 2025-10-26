@@ -90,8 +90,8 @@ export function SignupForm() {
   const handleSocialSignUp = (provider: GoogleAuthProvider | OAuthProvider) => {
     signInWithPopup(auth, provider)
       .then(result => {
-        syncUserData(result.user);
-        // The redirect is handled by the AuthRedirect component
+        // The onAuthStateChanged listener in FirebaseProvider will handle syncing the user data.
+        // No need to call syncUserData here.
       })
       .catch((error: any) => {
         toast({
@@ -107,8 +107,9 @@ export function SignupForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
       
+      // Update the profile in Firebase Auth.
+      // The onAuthStateChanged listener will then pick up this change and sync it to Firestore.
       await updateProfile(user, { displayName: values.name });
-      syncUserData({ ...user, displayName: values.name });
       
       // The redirect is handled by the AuthRedirect component
     } catch (error: any) {

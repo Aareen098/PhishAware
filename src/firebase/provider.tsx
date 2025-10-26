@@ -95,6 +95,7 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
                 creationTime: firebaseUser.metadata.creationTime,
                 lastSignInTime: firebaseUser.metadata.lastSignInTime,
             };
+            // Use merge:true to avoid overwriting fields like 'bio' that might be set elsewhere
             setDocumentNonBlocking(userRef, userData, { merge: true });
         }
         setUserAuthState({ user: firebaseUser, isUserLoading: false, userError: null });
