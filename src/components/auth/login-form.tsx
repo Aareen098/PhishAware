@@ -70,6 +70,7 @@ export function LoginForm() {
       email: "",
       password: "",
     },
+    shouldUnregister: true,
   });
 
   const syncUserData = (user: User) => {

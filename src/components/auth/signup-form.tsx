@@ -71,6 +71,7 @@ export function SignupForm() {
       email: "",
       password: "",
     },
+    shouldUnregister: true,
   });
 
   const syncUserData = (user: User) => {
