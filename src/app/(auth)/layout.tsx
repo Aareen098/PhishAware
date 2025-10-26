@@ -14,7 +14,7 @@ export default function AuthLayout({
         <Shield className="h-6 w-6" />
         <h1 className="text-xl font-bold font-headline">PhishAware</h1>
       </Link>
-      <div className="w-full max-w-sm mb-12 mt-16 sm:mt-0">{children}</div>
+      <div className="w-full max-w-sm mb-12 mt-16 sm:mt-8">{children}</div>
       <Footer />
     </div>
   );
