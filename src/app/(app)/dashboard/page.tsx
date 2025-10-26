@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Activity, ShieldCheck, Target, Wand2 } from 'lucide-react';
+import { Activity, ShieldCheck, Target } from 'lucide-react';
 import { StatsCard } from '@/components/dashboard/stats-card';
 import { PerformanceChart } from '@/components/dashboard/performance-chart';
 import { ScenarioList } from '@/components/dashboard/scenario-list';
@@ -14,7 +14,7 @@ import { ProfileCard } from '@/components/profile/profile-card';
 export default function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <StatsCard
           title="Scenarios Completed"
           value="0"
@@ -33,16 +33,6 @@ export default function DashboardPage() {
           icon={<Activity className="h-4 w-4 text-muted-foreground" />}
           description="Complete scenarios to analyze"
         />
-         <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">AI-Powered Next Step</CardTitle>
-                <Wand2 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">Coming Soon</div>
-                <p className="text-xs text-muted-foreground">AI suggestions are temporarily disabled.</p>
-            </CardContent>
-         </Card>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
         <div className="col-span-1 flex flex-col gap-4 lg:col-span-4">
