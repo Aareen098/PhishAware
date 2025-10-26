@@ -13,10 +13,7 @@ import { googleAI } from '@genkit-ai/google-genai';
 // This makes Google's models available for use in the application.
 export const ai = genkit({
   plugins: [
-    googleAI({
-      // Specify the API version.
-      apiVersion: 'v1beta',
-    }),
+    googleAI(),
   ],
   // Log errors to the console.
   logLevel: 'error',
