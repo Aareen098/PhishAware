@@ -71,15 +71,8 @@ export function QuizClient({ scenario }: QuizClientProps) {
       setIsAnswered(false);
       setSelectedOptionId(null);
     } else {
-      const finalAttempt: QuizAttempt = {
-        ...attempt,
-        scenarioTitle: scenario.title,
-        score: Math.round((score / totalQuestions) * 100),
-      };
-      // This is a client-side "hack" to pass state to the next page without using query params
-      // In a real app, you might save this to a DB and pass an ID
-      lastAttempt = finalAttempt;
-      router.push(`/quiz/${scenario.id}/feedback`);
+      // Quiz finished, redirect to dashboard or a results summary (non-AI)
+      router.push(`/dashboard`);
     }
   };
 
@@ -172,7 +165,7 @@ export function QuizClient({ scenario }: QuizClientProps) {
         <CardFooter>
           {isAnswered ? (
             <Button onClick={handleNextQuestion} className="ml-auto">
-              {currentQuestionIndex === totalQuestions - 1 ? 'View Results' : 'Next Question'}
+              {currentQuestionIndex === totalQuestions - 1 ? 'Finish Quiz' : 'Next Question'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (

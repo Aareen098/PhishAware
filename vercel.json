@@ -1,9 +1,0 @@
-
-{
-    "functions": {
-        "src/app/api/genkit/[...slug]/route.ts": {
-            "memory": 2048,
-            "maxDuration": 30
-        }
-    }
-}
