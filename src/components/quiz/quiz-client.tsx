@@ -1,27 +1,31 @@
 "use client";
 
 import { useState } from 'react';
-import type { Scenario, Question } from '@/lib/types';
+import type { Scenario } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle2, XCircle, ArrowRight, RotateCw, BarChart } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { QuizAttempt } from '@/lib/types';
 
 type QuizClientProps = {
   scenario: Scenario;
 };
 
+// Store attempt in memory to pass between pages
+let lastAttempt: QuizAttempt | null = null;
+export const getLastAttempt = () => lastAttempt;
+
 export function QuizClient({ scenario }: QuizClientProps) {
+  const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
-  const [showResults, setShowResults] = useState(false);
   const [attempt, setAttempt] = useState<QuizAttempt>({ questions: [] });
 
   const currentQuestion = scenario.questions[currentQuestionIndex];
@@ -67,58 +71,19 @@ export function QuizClient({ scenario }: QuizClientProps) {
       setIsAnswered(false);
       setSelectedOptionId(null);
     } else {
-      setAttempt(prev => ({
-        ...prev,
+      const finalAttempt: QuizAttempt = {
+        ...attempt,
         scenarioTitle: scenario.title,
         score: Math.round((score / totalQuestions) * 100),
-      }));
-      setShowResults(true);
+      };
+      // This is a client-side "hack" to pass state to the next page without using query params
+      // In a real app, you might save this to a DB and pass an ID
+      lastAttempt = finalAttempt;
+      router.push(`/quiz/${scenario.id}/feedback`);
     }
   };
 
-  const handleRestart = () => {
-    setCurrentQuestionIndex(0);
-    setSelectedOptionId(null);
-    setIsAnswered(false);
-    setScore(0);
-    setShowResults(false);
-    setAttempt({ questions: [] });
-  }
-
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
-
-  if (showResults) {
-    return (
-        <div className="space-y-6">
-            <Card className="text-center">
-                <CardHeader>
-                    <CardTitle className="text-3xl font-headline">Scenario Complete!</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <p className="text-lg text-muted-foreground">Your Score:</p>
-                    <p className="text-6xl font-bold text-primary">
-                        {Math.round((score / totalQuestions) * 100)}%
-                    </p>
-                    <p className="text-muted-foreground">
-                        You correctly answered {score} out of {totalQuestions} questions.
-                    </p>
-                </CardContent>
-                <CardFooter className="flex justify-center gap-4">
-                     <Button onClick={handleRestart}>
-                        <RotateCw className="mr-2 h-4 w-4" />
-                        Try Again
-                    </Button>
-                    <Button asChild variant="outline">
-                        <Link href="/dashboard">
-                            <BarChart className="mr-2 h-4 w-4" />
-                            Back to Dashboard
-                        </Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-    );
-  }
 
   return (
     <div>
