@@ -9,7 +9,6 @@ import { Activity, ShieldCheck, Target } from 'lucide-react';
 import { StatsCard } from '@/components/dashboard/stats-card';
 import { PerformanceChart } from '@/components/dashboard/performance-chart';
 import { ScenarioList } from '@/components/dashboard/scenario-list';
-import { ProfileCard } from '@/components/profile/profile-card';
 
 export default function DashboardPage() {
   return (
@@ -43,15 +42,6 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="pl-2">
               <PerformanceChart />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-                <CardTitle>Profile Status</CardTitle>
-                <CardDescription>Your account details and activity.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ProfileCard />
             </CardContent>
           </Card>
         </div>

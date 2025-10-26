@@ -40,7 +40,7 @@ export function ProfileCard() {
                     </div>
                      <div className="flex items-center text-sm">
                         <Mail className="mr-2 h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">phishaware-user</span>
+                        <span className="text-muted-foreground">{user.email}</span>
                     </div>
                 </div>
 
