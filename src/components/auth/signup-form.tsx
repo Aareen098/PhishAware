@@ -71,7 +71,7 @@ export function SignupForm() {
       email: "",
       password: "",
     },
-    shouldUnregister: true,
+    shouldUnregister: false,
   });
 
   const syncUserData = (user: User) => {
@@ -88,7 +88,20 @@ export function SignupForm() {
     setDocumentNonBlocking(userRef, userData, { merge: true });
   };
   
-  const handleSocialSignUp = (provider: GoogleAuthProvider | OAuthProvider) => {
+  const handleSocialSignUp = (providerName: 'google' | 'apple') => {
+    let provider: GoogleAuthProvider | OAuthProvider;
+
+    if (providerName === 'google') {
+      provider = new GoogleAuthProvider();
+    } else {
+      provider = new OAuthProvider('apple.com');
+      provider.addScope('email');
+      provider.addScope('name');
+      provider.setCustomParameters({
+        locale: 'en'
+      });
+    }
+
     signInWithPopup(auth, provider)
       .then(result => {
         // The onAuthStateChanged listener in FirebaseProvider will handle syncing the user data.
@@ -179,8 +192,8 @@ export function SignupForm() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
-        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp('google')}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignUp('apple')}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
       </div>
     </div>
   );

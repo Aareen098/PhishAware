@@ -70,7 +70,7 @@ export function LoginForm() {
       email: "",
       password: "",
     },
-    shouldUnregister: true,
+    shouldUnregister: false,
   });
 
   const syncUserData = (user: User) => {
@@ -88,7 +88,20 @@ export function LoginForm() {
     setDocumentNonBlocking(userRef, userData, { merge: true });
   };
 
-  const handleSocialSignIn = (provider: GoogleAuthProvider | OAuthProvider) => {
+  const handleSocialSignIn = (providerName: 'google' | 'apple') => {
+    let provider: GoogleAuthProvider | OAuthProvider;
+
+    if (providerName === 'google') {
+      provider = new GoogleAuthProvider();
+    } else {
+      provider = new OAuthProvider('apple.com');
+      provider.addScope('email');
+      provider.addScope('name');
+      provider.setCustomParameters({
+        locale: 'en'
+      });
+    }
+
     signInWithPopup(auth, provider)
       .then(result => {
         syncUserData(result.user);
@@ -160,8 +173,8 @@ export function LoginForm() {
         </div>
       </div>
        <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn(new GoogleAuthProvider())}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
-        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn(new OAuthProvider('apple.com'))}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn('google')}><GoogleIcon className="mr-2 h-4 w-4" /> Google</Button>
+        <Button variant="outline" className="font-medium bg-background/70" onClick={() => handleSocialSignIn('apple')}><AppleIcon className="mr-2 h-4 w-4" /> Apple</Button>
       </div>
     </div>
   );
